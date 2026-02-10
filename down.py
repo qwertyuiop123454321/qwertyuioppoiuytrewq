@@ -126,10 +126,7 @@ running = True
 while running:
     for event in pygame.event.get():
 
-
-        # Quit button
         if event.type == pygame.QUIT:
-            print("Wheel window closed — running action now")
             timed_alert("Wrong Choice", 2)
             timed_alert("Computer Shutdown Imminent In: 3", 1)
             timed_alert("Computer Shutdown Imminent In: 2", 1)
@@ -138,9 +135,19 @@ while running:
             pygame.quit()
             sys.exit()
 
-
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+            # Build typed string
+            if event.unicode.isalpha():
+                typed_text += event.unicode.lower()
+                typed_text = typed_text[-10:]  # keep buffer small
+
+            # Check for "exit"
+            if "exit" in typed_text:
+                pygame.quit()
+                sys.exit()
+
+            # Existing shutdown keys
+            if event.key == pygame.K_ESCAPE or event.key == pygame.K_F11:
                 timed_alert("Wrong Choice", 2)
                 timed_alert("Computer Shutdown Imminent In: 3", 1)
                 timed_alert("Computer Shutdown Imminent In: 2", 1)
@@ -149,28 +156,7 @@ while running:
                 pygame.quit()
                 sys.exit()
 
-
-            if event.key == pygame.K_F11:
-                timed_alert("Wrong Choice", 2)
-                timed_alert("Computer Shutdown Imminent In: 3", 1)
-                timed_alert("Computer Shutdown Imminent In: 2", 1)
-                timed_alert("Computer Shutdown Imminent In: 1", 1)
-                os.system("shutdown /s /t 0")
-                pygame.quit()
-                sys.exit()
-
-
-    # Click to spin
-    if event.type == pygame.MOUSEBUTTONDOWN and not spinning:
-        mx, my = event.pos
-        dist = math.hypot(mx - center[0], my - center[1])
-
-
-        if dist <= radius:
-            spin_speed = random.uniform(20, 30)
-            spinning = True
-
-
+                
     screen.fill("white")
 
 
